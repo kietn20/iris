@@ -16,7 +16,7 @@ void convert_to_grayscale(py::array_t<unsigned char> image) {
     // It must have 3 or 4 channels (RGB or RGBA)
     ssize_t channels = buf.shape[2];
     if (channels != 3 && channels != 4) {
-        throw std:runtime_error("Image must have 3 (RGB) or 4 (RGBA) channels");
+        throw std::runtime_error("Image must have 3 (RGB) or 4 (RGBA) channels");
     }
 
     // 3. Get a raw C++ pointer to the beginning of the array data
