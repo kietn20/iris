@@ -13,7 +13,7 @@ def main():
     """
     Loads an image, calls the C++ grayscale function, and saves the result.
     """
-    input_filename = "test_image.png"
+    input_filename = "test_image.jpg"
     output_filename = "grayscale_output.png"
 
     print(f"Loading image '{input_filename}'...")
