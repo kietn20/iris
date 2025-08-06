@@ -1,5 +1,6 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/numpy.h> // for NumPy array
+#include <vector>
 
 namespace py = pybind11;
 
@@ -46,8 +47,50 @@ void convert_to_grayscale(py::array_t<unsigned char> image) {
     }
 }
 
+py::array_t<unsigned char> apply_box_blur(py::array_t<unsigned char> image, int radius) {
+    py::buffer_info input_buf = image.request();
+    auto *input_ptr = static_cast<unsigned char *>(input_buf.ptr);
+
+    if (input_buf.ndim != 3) { throw std::runtime_error("NumPy array must be 3-dimensional"); }
+    if (radius < 1) { throw std::runtime_error("Radius must be 1 or greater"); }
+    
+    ssize_t height = input_buf.shape[0];
+    ssize_t width = input_buf.shape[1];
+    ssize_t channels = input_buf.shape[2];
+
+    auto output_arr = py::array_t<unsigned char>(input_buf.size);
+    output_arr.resize({height, width, channels});
+    py:buffer_info output_buf = output_buf = output_arr.request();
+    auto *output_ptr = static_cast<unsigned char *>(output_buf.ptr);
+
+    for (ssize_t r = 0; r < height; ++r) {
+        for (ssize_t c = 0; c < width; ++c) {
+            for (ssize_t ch = 0; ch < channels; ++ch) {
+                unsigned int total = 0;
+                int count = 0;
+
+                for (ssize_t y = -radius; y <= radius; ++y) {
+                    for (ssize_t x = -radius; x <= radius; ++x ) {
+                        ssize_t current_r = r + y;
+                        ssize_t current_c = c + x;
+
+                        if (current_r >= 0 && current_r < height && current_c >= 0 && current_c < width) {
+                            total += input_ptr[(current_r * width + current_c) * channels + ch];
+                            count++;
+                        }
+                    }
+                }
+
+                output_ptr[(r * width + c) * channels + ch] = static_cast<unsigned char>(total / count);
+            }
+        }
+    }
+    return output_arr;
+}
+
 PYBIND11_MODULE(iris, m) {
     m.doc() = "Iris: A high-performance C++/Python image processing library";
 
     m.def("convert_to_grayscale", &convert_to_grayscale, "Converts an image to grayscale in-place.", py::arg("image"));
+    m.def("apply_box_blur", &apply_box_blur, "Applies a box blur to an image and returns a new blurred image.", py::arg("image"), py::arg("radius") = 1);
 }
