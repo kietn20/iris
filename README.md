@@ -15,7 +15,7 @@ The primary goal of this project was to showcase the performance gains of using 
 
 **The C++ engine outperformed the pure Python implementation by nearly 70x.**
 
-![Benchmark Results](https://github.com/kietn20/iris/blob/main/benchmark.jpg)
+![Benchmark Results](https://github.com/kietn20/iris/blob/main/benchmark.png)
 
 ## How to Build and Run
 
