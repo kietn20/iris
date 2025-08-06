@@ -60,7 +60,7 @@ py::array_t<unsigned char> apply_box_blur(py::array_t<unsigned char> image, int 
 
     auto output_arr = py::array_t<unsigned char>(input_buf.size);
     output_arr.resize({height, width, channels});
-    py:buffer_info output_buf = output_buf = output_arr.request();
+    py::buffer_info output_buf = output_arr.request();
     auto *output_ptr = static_cast<unsigned char *>(output_buf.ptr);
 
     for (ssize_t r = 0; r < height; ++r) {

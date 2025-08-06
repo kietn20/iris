@@ -25,7 +25,7 @@ def python_box_blur(image_np, radius):
                     for x in range(-radius, radius + 1):
                         current_r, current_c = r + y, c + x
                         if 0 <= current_r < height and 0 <= current_c < width:
-                            total += image_np[current_r, current_c, ch]
+                            total += int(image_np[current_r, current_c, ch])
                             count += 1
                 output_np[r, c, ch] = total // count
     return output_np
@@ -33,12 +33,12 @@ def python_box_blur(image_np, radius):
 
 def main():
     """Loads an image, benchmarks C++ vs Python, and saves the results."""
-    input_filename = "test_image.png"
+    input_filename = "test_image.jpg"
     output_cpp_filename = "blur_output_cpp.png"
     output_py_filename = "blur_output_python.png"
     blur_radius = 5  # a larger radius will show a more dramatic speed difference
 
-    print("--- Phase 3: C++ vs. Python Performance Benchmark ---")
+    print("--- C++ vs. Python Performance Benchmark ---")
     print(f"Loading image '{input_filename}' and preparing for blur (radius={blur_radius})...")
     
     try:
